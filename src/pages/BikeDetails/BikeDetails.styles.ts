@@ -1,3 +1,7 @@
+import ChevronRightOutlined from '@mui/icons-material/ChevronRightOutlined'
+import FavoriteBorderOutlined from '@mui/icons-material/FavoriteBorderOutlined'
+import HomeOutlined from '@mui/icons-material/HomeOutlined'
+import InfoOutlined from '@mui/icons-material/InfoOutlined'
 import {
   Box,
   BoxProps,
@@ -9,10 +13,6 @@ import {
   IconButtonProps,
   styled,
 } from '@mui/material'
-import FavoriteBorderOutlined from '@mui/icons-material/FavoriteBorderOutlined'
-import ChevronRightOutlined from '@mui/icons-material/ChevronRightOutlined'
-import HomeOutlined from '@mui/icons-material/HomeOutlined'
-import InfoOutlined from '@mui/icons-material/InfoOutlined'
 
 export const BreadcrumbContainer = styled(Box)<BoxProps>(({ theme }) => ({
   position: 'relative',
@@ -72,10 +72,19 @@ export const InfoIcon = styled(InfoOutlined)(({ theme }) => ({
   color: theme.palette.grey[500],
 }))
 
-export const OverviewContainer = styled(Card)<CardProps>(({ theme }) => ({
+export const PickerAndOverviewContainer = styled(Card)<CardProps>(({ theme }) => ({
   borderColor: theme.palette.grey[500],
-  padding: 34,
+  width: '100%',
+}))
+
+export const DatePickerContainer = styled(Box)<BoxProps>(() => ({
+  marginBottom: 22,
+  padding: '35px 11px 0 11px',
+}))
+
+export const OverviewContainer = styled(Box)<BoxProps>(() => ({
   maxHeight: 295,
+  padding: 34,
 }))
 
 export const BookingButton = styled(Button)<ButtonProps>(({ theme }) => ({
