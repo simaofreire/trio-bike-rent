@@ -73,7 +73,7 @@ export const Day = styled(Button, {
   cursor: isDisabled ? 'not-allowed' : 'pointer',
   fontWeight: 600,
   color: 'white',
-  opacity: sameMonth ? 0.5 : 1,
+  opacity: sameMonth ? 0.5 : isDisabled ? 0.5 : 1,
   border: today ? '1px solid' : 'none',
   minWidth: 0,
   background: isSelected ? 'white' : 'none',
