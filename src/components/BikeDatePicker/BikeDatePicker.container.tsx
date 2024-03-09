@@ -1,48 +1,36 @@
-import { ChevronLeft, ChevronRight } from '@mui/icons-material'
 import {
   addDays,
   addMonths,
+  differenceInDays,
+  eachDayOfInterval,
   endOfMonth,
   endOfWeek,
   format,
   isBefore,
+  isSameDay,
   isSameMonth,
   isToday,
   startOfDay,
   startOfMonth,
   startOfWeek,
-  subMonths
+  subMonths,
 } from 'date-fns'
 import { useEffect, useState } from 'react'
-import {
-  CalendarDays,
-  Container,
-  Day,
-  Header,
-  IconsContainer,
-  LeftIcon,
-  Month,
-  MonthYear,
-  RightIcon,
-  WeekDay,
-  WeekDays,
-  Year,
-} from './BikeDatePicker.styles'
+import { BikeDatePicker } from './BikeDatePicker.component'
 
-interface CallendarDaysProps {
+export interface CalendarDaysProps {
   formattedDate: string
-  isDisabled: boolean
-  today: boolean
-  isSelected?: boolean
+  types: string
   sameMonth: boolean
+  fullDate: Date
 }
 
-const BikeDatePicker = () => {
-  const [currentDate, setCurrentDate] = useState(new Date())
-  const [startDate, setStartDate] = useState<Date | null>(null)
-  const [endDate, setEndDate] = useState<Date | null>(null)
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [callendarDays, setCallendarDays] = useState<CallendarDaysProps[]>([])
+const BikeDatePickerContainer = () => {
+  const [currentDate, setCurrentDate] = useState<Date>(new Date())
+  const [startDate, setStartDate] = useState<Date | null | string>('')
+  const [endDate, setEndDate] = useState<Date | null | string>('')
+  const [calendarDays, setCalendarDays] = useState<CalendarDaysProps[]>([])
+  const [range, setRange] = useState<Date[] | null>([])
 
   const handlePrevMonth = () => {
     setCurrentDate((prevDate) => subMonths(prevDate, 1))
@@ -53,82 +41,91 @@ const BikeDatePicker = () => {
   }
 
   const handleDateClick = (date: Date) => {
-    setSelectedDate(date)
+    if (!startDate) {
+      setStartDate(date)
+    }
+
+    if (startDate && !endDate && !isBefore(date, startOfDay(startDate))) {
+      setEndDate(date)
+
+      const daysDifference = differenceInDays(date, startDate)
+
+      if (daysDifference > 1) {
+        setRange(eachDayOfInterval({ start: startDate, end: date }))
+      }
+    }
+
+    if (startDate && endDate) {
+      setStartDate(null)
+      setEndDate(null)
+      setRange(null)
+    }
   }
 
   const renderDays = () => {
     const monthStart = startOfMonth(currentDate)
     const monthEnd = endOfMonth(monthStart)
-    const startDate = startOfWeek(monthStart)
-    const endDate = endOfWeek(monthEnd)
-
+    const beginDate = startOfWeek(monthStart)
+    const finishDate = endOfWeek(monthEnd)
     const daysArray = []
-    let day = startDate
+    let day = beginDate
     let formattedDate = ''
 
-    while (day <= endDate) {
+    while (day <= finishDate) {
       formattedDate = format(day, 'd')
       formattedDate = formattedDate.padStart(2, '0')
-      const isDisabled = isBefore(day, startOfDay(new Date()))
-      const today = isToday(day)
-      const sameMonth = !isSameMonth(day, monthStart)
+      const sameMonth = isSameMonth(day, monthStart)
 
       daysArray.push({
         formattedDate,
-        isDisabled,
-        today,
         sameMonth,
+        fullDate: day,
+        types: defineDayType(day),
       })
 
       day = addDays(day, 1)
     }
+    setCalendarDays(daysArray)
+  }
 
-    setCallendarDays(daysArray)
+  const defineDayType = (day: Date) => {
+    const isSelected =
+      (startDate && isSameDay(startDate, day)) || (endDate && isSameDay(endDate, day))
+
+    let isRange = false
+    if (range) {
+      const rangeCopy = [...range]
+      rangeCopy.shift()
+      rangeCopy.pop()
+      isRange = rangeCopy.map((date) => date.toISOString()).includes(day.toISOString())
+    }
+
+    if (!isSelected && isToday(day)) {
+      return 'today'
+    } else if (isBefore(day, startOfDay(new Date()))) {
+      return 'disabled'
+    } else if (isRange) {
+      return 'range'
+    } else if (isSelected) {
+      return 'selected'
+    } else {
+      return 'normal'
+    }
   }
 
   useEffect(() => {
     renderDays()
-  }, [currentDate])
+  }, [currentDate, startDate, endDate, range])
 
   return (
-    <Container>
-      <Header>
-        <MonthYear>
-          <Month>{format(currentDate, 'MMMM')}</Month>
-          <Year>{format(currentDate, 'yyyy')}</Year>
-        </MonthYear>
-        <IconsContainer>
-          <LeftIcon onClick={handlePrevMonth}>
-            <ChevronLeft />
-          </LeftIcon>
-          <RightIcon onClick={handleNextMonth}>
-            <ChevronRight />
-          </RightIcon>
-        </IconsContainer>
-      </Header>
-      <WeekDays>
-        {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((day) => (
-          <WeekDay key={day}>{day}</WeekDay>
-        ))}
-      </WeekDays>
-      <CalendarDays>
-        {callendarDays?.map(
-          ({ formattedDate, isDisabled, today, isSelected, sameMonth }, index) => (
-            <Day
-              key={index}
-              isDisabled={isDisabled}
-              isSelected={isSelected}
-              onClick={() => handleDateClick(new Date(currentDate))}
-              today={today}
-              sameMonth={sameMonth}
-            >
-              {formattedDate}
-            </Day>
-          ),
-        )}
-      </CalendarDays>
-    </Container>
+    <BikeDatePicker
+      currentDate={currentDate}
+      calendarDays={calendarDays}
+      handlePrevMonth={handlePrevMonth}
+      handleNextMonth={handleNextMonth}
+      handleDateClick={handleDateClick}
+    />
   )
 }
 
-export default BikeDatePicker
+export default BikeDatePickerContainer

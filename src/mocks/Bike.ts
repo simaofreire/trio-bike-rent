@@ -28,3 +28,11 @@ export const mockedBikesArray = [
   { ...mockedBike, id: 3 },
   { ...mockedBike, id: 4 },
 ]
+
+export const mockedBikeDatePicker = {
+  currentDate: new Date(),
+  calendarDays: [],
+  handlePrevMonth: jest.fn(),
+  handleNextMonth: jest.fn(),
+  handleDateClick: jest.fn(),
+}

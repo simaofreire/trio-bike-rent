@@ -1,4 +1,4 @@
-import { Box, Button, ButtonProps, IconButton, Typography, styled } from '@mui/material'
+import { Box, IconButton, Typography, styled } from '@mui/material'
 
 export const Container = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
@@ -51,33 +51,51 @@ export const CalendarDays = styled(Box)(() => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(7, 1fr)',
   justifyItems: 'center',
-  gap: 5,
+  lineHeight: '50px',
 }))
 
-interface DayProps extends ButtonProps {
-  isSelected?: boolean
-  isDisabled?: boolean
-  today?: boolean
+interface DayProps {
   sameMonth?: boolean
+  types?: string
 }
 
-export const Day = styled(Button, {
-  shouldForwardProp: (prop) =>
-    !['isDisabled', 'isSelected', 'today', 'sameMonth'].includes(prop.toString()),
-})<DayProps>(({ isDisabled, sameMonth, today, isSelected }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: 16,
-  borderRadius: '50%',
-  cursor: isDisabled ? 'not-allowed' : 'pointer',
-  fontWeight: 600,
-  color: 'white',
-  opacity: sameMonth ? 0.5 : isDisabled ? 0.5 : 1,
-  border: today ? '1px solid' : 'none',
-  minWidth: 0,
-  background: isSelected ? 'white' : 'none',
-}))
+export const Day = styled(Box, {
+  shouldForwardProp: (prop) => !['types', 'sameMonth'].includes(prop.toString()),
+})<DayProps>(({ theme, types, sameMonth }) => {
+  const isDisabled = types === 'disabled'
+  const isRange = types === 'range'
+  const isSelected = types === 'selected'
+  const isToday = types === 'today'
+
+  const baseStyles = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 16,
+    cursor: isDisabled ? 'not-allowed' : 'pointer',
+    fontWeight: 600,
+    opacity: sameMonth ? 1 : isDisabled ? 0.5 : 1,
+    border: isToday ? '1px solid' : 'none',
+    width: '100%',
+  }
+
+  const dynamicStyles = {
+    color: isSelected ? theme.palette.primary.main : 'inherit',
+    backgroundColor: isSelected ? 'white' : isRange ? '#C1CFF2' : 'transparent',
+  }
+
+  return {
+    ...baseStyles,
+    ...dynamicStyles,
+    borderRadius: '50%',
+
+    '&:hover': {
+      background: theme.palette.primary.light,
+      color: theme.palette.primary.main,
+      transition: '0.3s ease-in',
+    },
+  }
+})
 
 export const IconsContainer = styled(Box)(() => ({
   display: 'flex',
@@ -94,6 +112,10 @@ export const LeftIcon = styled(IconButton)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  '&:hover': {
+    background: theme.palette.primary.dark,
+    transition: '0.3s ease-in-out',
+  },
 }))
 
 export const RightIcon = styled(IconButton)(({ theme }) => ({
@@ -106,4 +128,8 @@ export const RightIcon = styled(IconButton)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  '&:hover': {
+    background: theme.palette.primary.dark,
+    transition: '0.3s ease-in-out',
+  },
 }))
