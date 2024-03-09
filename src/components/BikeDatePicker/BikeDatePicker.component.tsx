@@ -53,17 +53,20 @@ export const BikeDatePicker = ({
         ))}
       </WeekDays>
       <CalendarDays data-testid='date-picker-calendar-days'>
-        {calendarDays?.map(({ formattedDate, types, sameMonth, fullDate }, index) => (
-          <Day
-            key={index}
-            types={types}
-            onClick={() => types !== 'disabled' && handleDateClick(fullDate)}
-            sameMonth={sameMonth}
-            data-testid='date-picker-day'
-          >
-            {formattedDate}
-          </Day>
-        ))}
+        {calendarDays?.map(({ formattedDate, types, sameMonth, fullDate }, index) => {
+          const isDisabled = ['disabled'].includes(types)
+          return (
+            <Day
+              key={index}
+              types={types}
+              onClick={() => !isDisabled && handleDateClick(fullDate)}
+              sameMonth={sameMonth}
+              data-testid='date-picker-day'
+            >
+              {formattedDate}
+            </Day>
+          )
+        })}
       </CalendarDays>
     </Container>
   )

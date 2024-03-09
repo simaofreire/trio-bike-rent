@@ -7,7 +7,6 @@ export const Container = styled(Box)(({ theme }) => ({
   maxWidth: 375,
   width: '100%',
   margin: '0 auto',
-  height: 422,
   padding: '26px 24px 40px 24px',
 }))
 
@@ -64,8 +63,10 @@ export const Day = styled(Box, {
 })<DayProps>(({ theme, types, sameMonth }) => {
   const isDisabled = types === 'disabled'
   const isRange = types === 'range'
-  const isSelected = types === 'selected'
   const isToday = types === 'today'
+  const isStartDate = types === 'startDate'
+  const isEndDate = types === 'endDate'
+  const isSelected = isStartDate || isEndDate
 
   const baseStyles = {
     display: 'flex',
@@ -82,18 +83,67 @@ export const Day = styled(Box, {
   const dynamicStyles = {
     color: isSelected ? theme.palette.primary.main : 'inherit',
     backgroundColor: isSelected ? 'white' : isRange ? '#C1CFF2' : 'transparent',
+    borderRadius: isRange ? '0' : '50%',
   }
 
   return {
     ...baseStyles,
     ...dynamicStyles,
-    borderRadius: '50%',
+    position: 'relative',
+    zIndex: 1,
+    ...(isEndDate && {
+      '&::after, &::before': {
+        content: '""',
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        left: '0',
+        borderRadius: '0 50% 50% 0',
+        backgroundColor: '#C1CFF2',
+        zIndex: -1,
+      },
 
+      '&::after': {
+        top: 0,
+        borderRadius: '50%',
+        backgroundColor: 'white',
+      },
+    }),
+
+    ...(isStartDate && {
+      '&::after, &::before': {
+        content: '""',
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        right: '0',
+        borderRadius: '50% 0 0 50%',
+        backgroundColor: '#C1CFF2',
+        zIndex: -1,
+      },
+
+      '&::after': {
+        top: 0,
+        borderRadius: '50%',
+        backgroundColor: 'white',
+      },
+    }),
     '&:hover': {
-      background: theme.palette.primary.light,
+      backgroundColor: theme.palette.primary.light,
       color: theme.palette.primary.main,
       transition: '0.3s ease-in',
     },
+
+    // '&::before': {
+    //   content: '""',
+    //   width: 40,
+    //   height: 40,
+    //   borderRadius: '10%  10% 10%',
+    //   backgroundColor: 'red',
+    //   top: 5,
+    //   left: 15,
+    //   position: 'absolute',
+    // },
   }
 })
 

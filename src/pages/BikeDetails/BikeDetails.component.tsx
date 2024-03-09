@@ -6,6 +6,8 @@ import BikeType from 'components/BikeType'
 import BookingAddressMap from 'components/BookingAddressMap'
 import Header from 'components/Header'
 import Bike from 'models/Bike'
+
+import { eachDayOfInterval } from 'date-fns'
 import {
   BookingButton,
   BreadcrumbContainer,
@@ -25,14 +27,32 @@ import { getServicesFee } from './BikeDetails.utils'
 
 interface BikeDetailsProps {
   bike?: Bike
+  startDate: Date | string
+  endDate: Date | string
+  loading: boolean
+  setStartDate: (date: Date | string) => void
+  setEndDate: (date: Date | string) => void
+  getBikeRentAmount?: () => void
 }
 
-const BikeDetails = ({ bike }: BikeDetailsProps) => {
+const BikeDetails = ({
+  bike,
+  startDate,
+  endDate,
+  setStartDate,
+  setEndDate,
+  getBikeRentAmount,
+  loading,
+}: BikeDetailsProps) => {
+  const checkHowManyDays = eachDayOfInterval({
+    start: startDate as Date,
+    end: endDate as Date,
+  }).length
   const rateByDay = bike?.rate || 0
+  const subtotal = checkHowManyDays * rateByDay
   const rateByWeek = rateByDay * 7
-
-  const servicesFee = getServicesFee(rateByDay)
-  const total = rateByDay + servicesFee
+  const servicesFee = getServicesFee(rateByDay) * checkHowManyDays
+  const total = checkHowManyDays * rateByDay + servicesFee
 
   return (
     <div data-testid='bike-details-page'>
@@ -118,7 +138,12 @@ const BikeDetails = ({ bike }: BikeDetailsProps) => {
             <Typography variant='h2' fontSize={24} marginBottom={1.25} marginLeft={3}>
               Select date and time
             </Typography>
-            <BikeDatePicker />
+            <BikeDatePicker
+              startDate={startDate}
+              endDate={endDate}
+              setStartDate={setStartDate}
+              setEndDate={setEndDate}
+            />
           </DatePickerContainer>
 
           <OverviewContainer data-testid='bike-overview-container'>
@@ -134,7 +159,7 @@ const BikeDetails = ({ bike }: BikeDetailsProps) => {
                 <InfoIcon fontSize='small' />
               </Box>
 
-              <Typography>{rateByDay} €</Typography>
+              <Typography>{subtotal} €</Typography>
             </PriceRow>
 
             <PriceRow marginTop={1.5} data-testid='bike-overview-single-price'>
@@ -160,6 +185,8 @@ const BikeDetails = ({ bike }: BikeDetailsProps) => {
               disableElevation
               variant='contained'
               data-testid='bike-booking-button'
+              onClick={getBikeRentAmount}
+              disabled={loading}
             >
               Add to booking
             </BookingButton>

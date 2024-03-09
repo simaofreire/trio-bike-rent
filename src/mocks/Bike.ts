@@ -35,4 +35,10 @@ export const mockedBikeDatePicker = {
   handlePrevMonth: jest.fn(),
   handleNextMonth: jest.fn(),
   handleDateClick: jest.fn(),
+  startDate: '',
+  endDate: '',
+  setStartDate: jest.fn(),
+  setEndDate: jest.fn(),
+  getBikeRentAmount: jest.fn(),
+  loading: false,
 }

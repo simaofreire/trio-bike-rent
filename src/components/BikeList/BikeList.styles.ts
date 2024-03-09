@@ -1,4 +1,4 @@
-import { Box, styled, BoxProps } from '@mui/material'
+import { Box, BoxProps, styled } from '@mui/material'
 
 export const Container = styled(Box)<BoxProps>(() => ({
   width: '100%',
@@ -18,8 +18,9 @@ export const QuantityContainer = styled(Box)<BoxProps>(({ theme }) => ({
 
 export const ListContainer = styled(Box)<BoxProps>(({ theme }) => ({
   display: 'grid',
-  gridTemplateColumns: '1fr 1fr 1fr',
+  gridTemplateColumns: 'repeat(3, 1fr)',
   gap: 25,
+  justifyItems: 'center',
 
   [theme.breakpoints.down('md')]: {
     gridTemplateColumns: '1fr',

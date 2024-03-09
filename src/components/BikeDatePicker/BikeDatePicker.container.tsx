@@ -25,10 +25,20 @@ export interface CalendarDaysProps {
   fullDate: Date
 }
 
-const BikeDatePickerContainer = () => {
+interface BikeDatePickerContainerProps {
+  startDate: Date | string
+  setStartDate: (date: Date | string) => void
+  endDate: Date | string
+  setEndDate: (date: Date | string) => void
+}
+
+const BikeDatePickerContainer = ({
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+}: BikeDatePickerContainerProps) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date())
-  const [startDate, setStartDate] = useState<Date | null | string>('')
-  const [endDate, setEndDate] = useState<Date | null | string>('')
   const [calendarDays, setCalendarDays] = useState<CalendarDaysProps[]>([])
   const [range, setRange] = useState<Date[] | null>([])
 
@@ -56,8 +66,8 @@ const BikeDatePickerContainer = () => {
     }
 
     if (startDate && endDate) {
-      setStartDate(null)
-      setEndDate(null)
+      setStartDate('')
+      setEndDate('')
       setRange(null)
     }
   }
@@ -92,25 +102,31 @@ const BikeDatePickerContainer = () => {
     const isSelected =
       (startDate && isSameDay(startDate, day)) || (endDate && isSameDay(endDate, day))
 
+    const isDisabledDay = isBefore(day, startOfDay(new Date()))
     let isRange = false
+
     if (range) {
       const rangeCopy = [...range]
       rangeCopy.shift()
       rangeCopy.pop()
       isRange = rangeCopy.map((date) => date.toISOString()).includes(day.toISOString())
     }
-
     if (!isSelected && isToday(day)) {
       return 'today'
-    } else if (isBefore(day, startOfDay(new Date()))) {
-      return 'disabled'
-    } else if (isRange) {
-      return 'range'
-    } else if (isSelected) {
-      return 'selected'
-    } else {
-      return 'normal'
     }
+    if (isDisabledDay) {
+      return 'disabled'
+    }
+    if (isRange) {
+      return 'range'
+    }
+    if (isSameDay(startDate, day)) {
+      return 'startDate'
+    }
+    if (isSameDay(endDate, day)) {
+      return 'endDate'
+    }
+    return 'normal'
   }
 
   useEffect(() => {

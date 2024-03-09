@@ -1,15 +1,23 @@
 import { render, screen } from '@testing-library/react'
+import { mockedBike, mockedBikeDatePicker } from 'mocks/Bike'
 import { BrowserRouter } from 'react-router-dom'
-import { mockedBike } from 'mocks/Bike'
+import BikeDetails from './BikeDetails.component'
 import { SERVICE_FEE_PERCENTAGE } from './BikeDetails.contants'
 import { getServicesFee } from './BikeDetails.utils'
-import BikeDetails from './BikeDetails.component'
 
 describe('BikeDetails page', () => {
   beforeEach(() => {
     render(
       <BrowserRouter>
-        <BikeDetails bike={mockedBike} />
+        <BikeDetails
+          bike={mockedBike}
+          startDate={mockedBikeDatePicker.startDate}
+          endDate={mockedBikeDatePicker.endDate}
+          setStartDate={mockedBikeDatePicker.setStartDate}
+          setEndDate={mockedBikeDatePicker.setEndDate}
+          getBikeRentAmount={mockedBikeDatePicker.getBikeRentAmount}
+          loading={mockedBikeDatePicker.loading}
+        />
       </BrowserRouter>,
     )
   })
