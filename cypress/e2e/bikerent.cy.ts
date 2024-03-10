@@ -5,7 +5,7 @@ describe('template spec', () => {
     const today = format(new Date(), 'dd')
     const threeDaysAhead = format(addDays(new Date(), 3), 'dd')
 
-    cy.visit('http://localhost:3000/')
+    cy.visit('/')
     cy.get('[data-testid="bike-card"]').eq(5).click()
     cy.get('[data-testid="date-picker-day"]').contains(today).click()
     cy.get('[data-testid="date-picker-day"]').contains(threeDaysAhead).click()
