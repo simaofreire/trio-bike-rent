@@ -29,16 +29,30 @@ export const mockedBikesArray = [
   { ...mockedBike, id: 4 },
 ]
 
-export const mockedBikeDatePicker = {
+export const mockedDatePicker = {
   currentDate: new Date(),
   calendarDays: [],
   handlePrevMonth: jest.fn(),
   handleNextMonth: jest.fn(),
   handleDateClick: jest.fn(),
-  startDate: '',
-  endDate: '',
+  startDate: null,
+  endDate: null,
   setStartDate: jest.fn(),
   setEndDate: jest.fn(),
-  getBikeRentAmount: jest.fn(),
+}
+
+export const mockedBikeDetails = {
+  bike: mockedBike,
+  startDate: null,
+  endDate: null,
+  setStartDate: jest.fn(),
+  setEndDate: jest.fn(),
+  handleAddToBooking: jest.fn(),
   loading: false,
+}
+
+export const mockedBookingConfirmation = {
+  imageUrl: 'https://cremecycles.com/images/glowne/14.jpg',
+  name: 'Kohler, Raynor and Kunze',
+  type: 'Cyclocross Bicycle',
 }

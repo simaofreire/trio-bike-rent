@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight } from '@mui/icons-material'
 import { format } from 'date-fns'
-import { CalendarDaysProps } from './BikeDatePicker.container'
+import { CalendarDaysProps } from './DatePicker.container'
+
 import {
   CalendarDays,
   Container,
@@ -14,9 +15,9 @@ import {
   WeekDay,
   WeekDays,
   Year,
-} from './BikeDatePicker.styles'
+} from './DatePicker.styles'
 
-interface BikeDatePickerProps {
+interface DatePickerProps {
   currentDate: Date
   calendarDays: CalendarDaysProps[]
   handlePrevMonth: () => void
@@ -24,13 +25,13 @@ interface BikeDatePickerProps {
   handleDateClick: (date: Date) => void
 }
 
-export const BikeDatePicker = ({
+export const DatePicker = ({
   currentDate,
   calendarDays,
   handlePrevMonth,
   handleNextMonth,
   handleDateClick,
-}: BikeDatePickerProps) => {
+}: DatePickerProps) => {
   return (
     <Container data-testid='bike-date-picker'>
       <Header>

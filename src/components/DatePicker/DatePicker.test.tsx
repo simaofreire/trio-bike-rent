@@ -1,24 +1,24 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { mockedBikeDatePicker } from 'mocks/Bike'
-import { BikeDatePicker } from './BikeDatePicker.component'
+import { mockedDatePicker } from 'mocks/Bike'
+import { DatePicker } from './DatePicker.component'
 
-describe('BikeDatePicker', () => {
+describe('DatePicker', () => {
   beforeEach(() => {
     render(
-      <BikeDatePicker
-        currentDate={mockedBikeDatePicker.currentDate}
-        calendarDays={mockedBikeDatePicker.calendarDays}
-        handlePrevMonth={mockedBikeDatePicker.handlePrevMonth}
-        handleNextMonth={mockedBikeDatePicker.handleNextMonth}
-        handleDateClick={mockedBikeDatePicker.handleDateClick}
+      <DatePicker
+        currentDate={mockedDatePicker.currentDate}
+        calendarDays={mockedDatePicker.calendarDays}
+        handlePrevMonth={mockedDatePicker.handlePrevMonth}
+        handleNextMonth={mockedDatePicker.handleNextMonth}
+        handleDateClick={mockedDatePicker.handleDateClick}
       />,
     )
   })
 
   const user = userEvent
 
-  it('should render the BikeDatePicker component', () => {
+  it('should render the DatePicker component', () => {
     const bikeDatePicker = screen.getByTestId('bike-date-picker')
     expect(bikeDatePicker).toBeInTheDocument()
   })
@@ -64,13 +64,13 @@ describe('BikeDatePicker', () => {
     const prevMonth = screen.getByTestId('date-picker-prev-month')
     user.click(prevMonth)
 
-    expect(mockedBikeDatePicker.handlePrevMonth).toHaveBeenCalled()
+    expect(mockedDatePicker.handlePrevMonth).toHaveBeenCalled()
   })
 
   it('should click on the previous month button', () => {
     const nextMonth = screen.getByTestId('date-picker-next-month')
     user.click(nextMonth)
 
-    expect(mockedBikeDatePicker.handleNextMonth).toHaveBeenCalled()
+    expect(mockedDatePicker.handleNextMonth).toHaveBeenCalled()
   })
 })

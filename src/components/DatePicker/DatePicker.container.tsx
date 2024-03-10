@@ -16,7 +16,7 @@ import {
   subMonths,
 } from 'date-fns'
 import { useEffect, useState } from 'react'
-import { BikeDatePicker } from './BikeDatePicker.component'
+import { DatePicker } from './DatePicker.component'
 
 export interface CalendarDaysProps {
   formattedDate: string
@@ -26,10 +26,10 @@ export interface CalendarDaysProps {
 }
 
 interface BikeDatePickerContainerProps {
-  startDate: Date | string
-  setStartDate: (date: Date | string) => void
-  endDate: Date | string
-  setEndDate: (date: Date | string) => void
+  startDate: Date | null
+  setStartDate: (date: Date | null) => void
+  endDate: Date | null
+  setEndDate: (date: Date | null) => void
 }
 
 const BikeDatePickerContainer = ({
@@ -66,8 +66,8 @@ const BikeDatePickerContainer = ({
     }
 
     if (startDate && endDate) {
-      setStartDate('')
-      setEndDate('')
+      setStartDate(date)
+      setEndDate(null)
       setRange(null)
     }
   }
@@ -120,10 +120,10 @@ const BikeDatePickerContainer = ({
     if (isRange) {
       return 'range'
     }
-    if (isSameDay(startDate, day)) {
+    if (isSameDay(startDate as Date, day)) {
       return 'startDate'
     }
-    if (isSameDay(endDate, day)) {
+    if (isSameDay(endDate as Date, day)) {
       return 'endDate'
     }
     return 'normal'
@@ -134,7 +134,7 @@ const BikeDatePickerContainer = ({
   }, [currentDate, startDate, endDate, range])
 
   return (
-    <BikeDatePicker
+    <DatePicker
       currentDate={currentDate}
       calendarDays={calendarDays}
       handlePrevMonth={handlePrevMonth}

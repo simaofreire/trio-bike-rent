@@ -78,72 +78,32 @@ export const Day = styled(Box, {
     opacity: sameMonth ? 1 : isDisabled ? 0.5 : 1,
     border: isToday ? '1px solid' : 'none',
     width: '100%',
+    zIndex: 1,
+    borderRadius: '50%',
+
+    '&:hover': {
+      backgroundColor: theme.palette.primary.light,
+      color: theme.palette.primary.main,
+      transition: theme.transitions.hover,
+    },
+
+    [theme.breakpoints.up('lg')]: {
+      '&:hover': {
+        backgroundColor: theme.palette.primary.light,
+        color: theme.palette.primary.main,
+        transition: theme.transitions.hover,
+      },
+    },
   }
 
   const dynamicStyles = {
     color: isSelected ? theme.palette.primary.main : 'inherit',
     backgroundColor: isSelected ? 'white' : isRange ? '#C1CFF2' : 'transparent',
-    borderRadius: isRange ? '0' : '50%',
   }
 
   return {
     ...baseStyles,
     ...dynamicStyles,
-    position: 'relative',
-    zIndex: 1,
-    ...(isEndDate && {
-      '&::after, &::before': {
-        content: '""',
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        left: '0',
-        borderRadius: '0 50% 50% 0',
-        backgroundColor: '#C1CFF2',
-        zIndex: -1,
-      },
-
-      '&::after': {
-        top: 0,
-        borderRadius: '50%',
-        backgroundColor: 'white',
-      },
-    }),
-
-    ...(isStartDate && {
-      '&::after, &::before': {
-        content: '""',
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        right: '0',
-        borderRadius: '50% 0 0 50%',
-        backgroundColor: '#C1CFF2',
-        zIndex: -1,
-      },
-
-      '&::after': {
-        top: 0,
-        borderRadius: '50%',
-        backgroundColor: 'white',
-      },
-    }),
-    '&:hover': {
-      backgroundColor: theme.palette.primary.light,
-      color: theme.palette.primary.main,
-      transition: '0.3s ease-in',
-    },
-
-    // '&::before': {
-    //   content: '""',
-    //   width: 40,
-    //   height: 40,
-    //   borderRadius: '10%  10% 10%',
-    //   backgroundColor: 'red',
-    //   top: 5,
-    //   left: 15,
-    //   position: 'absolute',
-    // },
   }
 })
 
