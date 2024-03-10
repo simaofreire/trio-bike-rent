@@ -1,12 +1,13 @@
 import { Box, Breadcrumbs, Divider, Link, Typography } from '@mui/material'
-import BikeDatePicker from 'components/BikeDatePicker'
 import BikeImageSelector from 'components/BikeImageSelector'
 import BikeSpecs from 'components/BikeSpecs'
 import BikeType from 'components/BikeType'
 import BookingAddressMap from 'components/BookingAddressMap'
+import DatePicker from 'components/DatePicker'
 import Header from 'components/Header'
 import Bike from 'models/Bike'
 
+import BookingConfirmation from 'components/BookingConfirmation/'
 import { eachDayOfInterval } from 'date-fns'
 import {
   BookingButton,
@@ -27,12 +28,13 @@ import { getServicesFee } from './BikeDetails.utils'
 
 interface BikeDetailsProps {
   bike?: Bike
-  startDate: Date | string
-  endDate: Date | string
-  loading: boolean
-  setStartDate: (date: Date | string) => void
-  setEndDate: (date: Date | string) => void
-  getBikeRentAmount?: () => void
+  startDate: Date | null
+  endDate: Date | null
+  setStartDate: (date: Date | null) => void
+  setEndDate: (date: Date | null) => void
+  handleAddToBooking: () => void
+  isBooked?: boolean
+  loading?: boolean
 }
 
 const BikeDetails = ({
@@ -41,7 +43,8 @@ const BikeDetails = ({
   endDate,
   setStartDate,
   setEndDate,
-  getBikeRentAmount,
+  handleAddToBooking,
+  isBooked,
   loading,
 }: BikeDetailsProps) => {
   const checkHowManyDays = eachDayOfInterval({
@@ -133,65 +136,69 @@ const BikeDetails = ({
           </Box>
         </DetailsContainer>
 
-        <PickerAndOverviewContainer variant='outlined'>
-          <DatePickerContainer>
-            <Typography variant='h2' fontSize={24} marginBottom={1.25} marginLeft={3}>
-              Select date and time
-            </Typography>
-            <BikeDatePicker
-              startDate={startDate}
-              endDate={endDate}
-              setStartDate={setStartDate}
-              setEndDate={setEndDate}
-            />
-          </DatePickerContainer>
-
-          <OverviewContainer data-testid='bike-overview-container'>
-            <Typography variant='h2' fontSize={16} marginBottom={1.25}>
-              Booking Overview
-            </Typography>
-
-            <Divider />
-
-            <PriceRow marginTop={1.75} data-testid='bike-overview-single-price'>
-              <Box display='flex' alignItems='center'>
-                <Typography marginRight={1}>Subtotal</Typography>
-                <InfoIcon fontSize='small' />
-              </Box>
-
-              <Typography>{subtotal} €</Typography>
-            </PriceRow>
-
-            <PriceRow marginTop={1.5} data-testid='bike-overview-single-price'>
-              <Box display='flex' alignItems='center'>
-                <Typography marginRight={1}>Service Fee</Typography>
-                <InfoIcon fontSize='small' />
-              </Box>
-
-              <Typography>{servicesFee} €</Typography>
-            </PriceRow>
-
-            <PriceRow marginTop={1.75} data-testid='bike-overview-total'>
-              <Typography fontWeight={800} fontSize={16}>
-                Total
+        {isBooked ? (
+          <BookingConfirmation imageUrl={bike?.imageUrls[0]} name={bike?.name} type={bike?.type} />
+        ) : (
+          <PickerAndOverviewContainer variant='outlined'>
+            <DatePickerContainer>
+              <Typography variant='h2' fontSize={24} marginBottom={1.25} marginLeft={3}>
+                Select date and time
               </Typography>
-              <Typography variant='h2' fontSize={24} letterSpacing={1}>
-                {total} €
-              </Typography>
-            </PriceRow>
+              <DatePicker
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+              />
+            </DatePickerContainer>
 
-            <BookingButton
-              fullWidth
-              disableElevation
-              variant='contained'
-              data-testid='bike-booking-button'
-              onClick={getBikeRentAmount}
-              disabled={loading}
-            >
-              Add to booking
-            </BookingButton>
-          </OverviewContainer>
-        </PickerAndOverviewContainer>
+            <OverviewContainer data-testid='bike-overview-container'>
+              <Typography variant='h2' fontSize={16} marginBottom={1.25}>
+                Booking Overview
+              </Typography>
+
+              <Divider />
+
+              <PriceRow marginTop={1.75} data-testid='bike-overview-single-price'>
+                <Box display='flex' alignItems='center'>
+                  <Typography marginRight={1}>Subtotal</Typography>
+                  <InfoIcon fontSize='small' />
+                </Box>
+
+                <Typography>{subtotal} €</Typography>
+              </PriceRow>
+
+              <PriceRow marginTop={1.5} data-testid='bike-overview-single-price'>
+                <Box display='flex' alignItems='center'>
+                  <Typography marginRight={1}>Service Fee</Typography>
+                  <InfoIcon fontSize='small' />
+                </Box>
+
+                <Typography>{servicesFee} €</Typography>
+              </PriceRow>
+
+              <PriceRow marginTop={1.75} data-testid='bike-overview-total'>
+                <Typography fontWeight={800} fontSize={16}>
+                  Total
+                </Typography>
+                <Typography variant='h2' fontSize={24} letterSpacing={1}>
+                  {total} €
+                </Typography>
+              </PriceRow>
+
+              <BookingButton
+                fullWidth
+                disableElevation
+                variant='contained'
+                data-testid='bike-booking-button'
+                onClick={handleAddToBooking}
+                disabled={loading}
+              >
+                Add to booking
+              </BookingButton>
+            </OverviewContainer>
+          </PickerAndOverviewContainer>
+        )}
       </Content>
     </div>
   )

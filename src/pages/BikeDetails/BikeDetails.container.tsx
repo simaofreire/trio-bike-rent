@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios'
+import { REACT_APP_BOILERPLATE_USER_ID } from 'config'
 import { format } from 'date-fns'
 import Bike from 'models/Bike'
 import { useEffect, useState } from 'react'
@@ -11,33 +13,35 @@ type StateReceived = {
 
 const BikeDetailsContainer = () => {
   const { state } = useLocation()
-
-  const [startDate, setStartDate] = useState<Date | string>('')
-  const [endDate, setEndDate] = useState<Date | string>('')
-  const [loading, setLoading] = useState<boolean>(false)
+  const [startDate, setStartDate] = useState<Date | null>(null)
+  const [endDate, setEndDate] = useState<Date | null>(null)
   const [currentBikeData, setCurrentBikeData] = useState<Bike>()
+  const [isBooked, setIsBooked] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const getBikeRentAmount = async () => {
+  const handleAddToBooking = async () => {
+    if (!currentBikeData || !startDate || !endDate) return alert('Please select dates')
     try {
       setLoading(true)
-      const formData = new FormData()
-      formData.append('bikeId', String(currentBikeData?.id))
-      formData.append('userId', String(process.env.REACT_APP_BOILERPLATE_CANDIDATE_ID))
-      formData.append('dateFrom', format(startDate, 'yyyy-MM-dd'))
-      formData.append('dateTo', format(endDate, 'yyyy-MM-dd'))
 
-      const { status, data } = await apiClient.post(
-        '/bikes/amount',
-        { data: formData },
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        },
-      )
+      const body = {
+        bikeId: +currentBikeData?.id,
+        userId: +REACT_APP_BOILERPLATE_USER_ID,
+        dateFrom: format(startDate, 'yyyy-MM-dd'),
+        dateTo: format(endDate, 'yyyy-MM-dd'),
+      }
 
+      const { status } = await apiClient.post('bikes/rent', body)
+      if (status === 200) {
+        setIsBooked(true)
+        setLoading(false)
+      }
+    } catch (error: unknown | AxiosError) {
+      console.error('Error while adding to booking', error)
       setLoading(false)
-    } catch (error) {
-      console.error('Error getting bike rent amount', error)
-      setLoading(false)
+      if (error instanceof AxiosError) {
+        alert(error?.response?.data.message)
+      }
     }
   }
 
@@ -48,10 +52,6 @@ const BikeDetailsContainer = () => {
     }
   }, [])
 
-  useEffect(() => {
-    if (startDate && endDate) getBikeRentAmount()
-  }, [endDate])
-
   return (
     <BikeDetails
       bike={currentBikeData}
@@ -59,7 +59,8 @@ const BikeDetailsContainer = () => {
       endDate={endDate}
       setStartDate={setStartDate}
       setEndDate={setEndDate}
-      getBikeRentAmount={getBikeRentAmount}
+      handleAddToBooking={handleAddToBooking}
+      isBooked={isBooked}
       loading={loading}
     />
   )
