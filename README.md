@@ -40,7 +40,7 @@ Or use paths to run specific component/page test
 yarn test <PATH_TO_COMPONENT>
 ```
 
-## How to run the unit tests Cypress tests
+## How to run the Cypress tests
 
 ```sh
 yarn cypress open --config baseUrl=http://localhost:3000/
