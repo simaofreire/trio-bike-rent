@@ -28,7 +28,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.
 
-## How to run the tests
+## How to run the unit tests
 
 ```sh
 yarn test
@@ -40,10 +40,16 @@ Or use paths to run specific component/page test
 yarn test <PATH_TO_COMPONENT>
 ```
 
+## How to run the unit tests Cypress tests
+
+```sh
+yarn cypress open --config baseUrl=http://localhost:3000/
+```
+
 It launches the test runner in the interactive watch mode.
 
 ## Folder structure
-
+- [cypress/](cypress/e2e/bikerent.cy.ts)
 - [assets/](./src/assets)
   - [fonts/](./src/assets/fonts)
 - [components/](./src/components)
@@ -54,6 +60,8 @@ It launches the test runner in the interactive watch mode.
   - [BikeSpecs/](./src/components/BikeSpecs)
   - [BikeType/](./src/components/BikeType)
   - [BookingAddressMap/](./src/components/BookingAddressMap)
+  - [BookingConfirmation/](./src/components/BookingConfirmation)
+  - [DatePicker/](./src/components/DatePicker)
   - [Header/](./src/components/Header)
 - [mocks/](./src/mocks)
   - [Bike.ts](./src/mocks/Bike.ts)
@@ -78,12 +86,12 @@ It launches the test runner in the interactive watch mode.
 
 ### Desktop
 
-https://user-images.githubusercontent.com/42481884/200061794-1ec4771f-de22-4007-9952-3d36b44feed2.mp4
+https://jam.dev/c/74866ab0-e3e4-40e4-add3-69ca66df290a
 
 ### Mobile
 
-https://user-images.githubusercontent.com/42481884/200061823-e73cd233-8a32-417c-a4ef-af38f81a6824.mp4
+https://jam.dev/c/a8b94bbc-0126-4de4-8dbf-1c4fbf06c504
 
 ## Test coverage (so far)
 
-<img width="487" alt="Captura de Tela 2022-11-04 às 16 06 44" src="https://user-images.githubusercontent.com/42481884/200062093-f0dcd641-e994-4248-acef-5c24bc0bc2e6.png">
+<img width="487" alt="Captura de Tela 2022-11-04 às 16 06 44" src="https://github.com/simaofreire/trio-bike-rent/assets/51380943/d544be89-9f79-4efd-bd51-9a28f7b7ecd8">
