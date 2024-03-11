@@ -15,7 +15,7 @@ import {
   startOfWeek,
   subMonths,
 } from 'date-fns'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { DatePicker } from './DatePicker.component'
 
 export interface CalendarDaysProps {
@@ -50,29 +50,32 @@ const BikeDatePickerContainer = ({
     setCurrentDate((prevDate) => addMonths(prevDate, 1))
   }
 
-  const handleDateClick = (date: Date) => {
-    if (!startDate) {
-      setStartDate(date)
-    }
-
-    if (startDate && !endDate && !isBefore(date, startOfDay(startDate))) {
-      setEndDate(date)
-
-      const daysDifference = differenceInDays(date, startDate)
-
-      if (daysDifference > 1) {
-        setRange(eachDayOfInterval({ start: startDate, end: date }))
+  const handleDateClick = useCallback(
+    (date: Date) => {
+      if (!startDate) {
+        setStartDate(date)
       }
-    }
 
-    if (startDate && endDate) {
-      setStartDate(date)
-      setEndDate(null)
-      setRange(null)
-    }
-  }
+      if (startDate && !endDate && !isBefore(date, startOfDay(startDate))) {
+        setEndDate(date)
 
-  const renderDays = () => {
+        const daysDifference = differenceInDays(date, startDate)
+
+        if (daysDifference > 1) {
+          setRange(eachDayOfInterval({ start: startDate, end: date }))
+        }
+      }
+
+      if (startDate && endDate) {
+        setStartDate(date)
+        setEndDate(null)
+        setRange(null)
+      }
+    },
+    [startDate, endDate],
+  )
+
+  const renderDays = useCallback(() => {
     const monthStart = startOfMonth(currentDate)
     const monthEnd = endOfMonth(monthStart)
     const beginDate = startOfWeek(monthStart)
@@ -96,33 +99,36 @@ const BikeDatePickerContainer = ({
       day = addDays(day, 1)
     }
     setCalendarDays(daysArray)
-  }
+  }, [startDate, endDate])
 
-  const defineDayType = (day: Date) => {
-    const isSelected =
-      (startDate && isSameDay(startDate, day)) || (endDate && isSameDay(endDate, day))
+  const defineDayType = useCallback(
+    (day: Date) => {
+      const isSelected =
+        (startDate && isSameDay(startDate, day)) || (endDate && isSameDay(endDate, day))
 
-    const isDisabledDay = isBefore(day, startOfDay(new Date()))
-    let isRange = false
+      const isDisabledDay = isBefore(day, startOfDay(new Date()))
+      let isRange = false
 
-    if (range) {
-      const rangeCopy = [...range]
-      rangeCopy.shift()
-      rangeCopy.pop()
-      isRange = rangeCopy.map((date) => date.toISOString()).includes(day.toISOString())
-    }
+      if (range) {
+        const rangeCopy = [...range]
+        rangeCopy.shift()
+        rangeCopy.pop()
+        isRange = rangeCopy.map((date) => date.toISOString()).includes(day.toISOString())
+      }
 
-    if (!isSelected && isToday(day)) return 'today'
-    if (isDisabledDay) return 'disabled'
-    if (isRange) return 'range'
-    if (isSameDay(startDate as Date, day)) return 'startDate'
-    if (isSameDay(endDate as Date, day)) return 'endDate'
-    return 'normal'
-  }
+      if (!isSelected && isToday(day)) return 'today'
+      if (isDisabledDay) return 'disabled'
+      if (isRange) return 'range'
+      if (isSameDay(startDate as Date, day)) return 'startDate'
+      if (isSameDay(endDate as Date, day)) return 'endDate'
+      return 'normal'
+    },
+    [startDate, endDate],
+  )
 
   useEffect(() => {
     renderDays()
-  }, [currentDate, startDate, endDate, range])
+  }, [currentDate, startDate, endDate])
 
   return (
     <DatePicker
