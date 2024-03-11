@@ -111,21 +111,12 @@ const BikeDatePickerContainer = ({
       rangeCopy.pop()
       isRange = rangeCopy.map((date) => date.toISOString()).includes(day.toISOString())
     }
-    if (!isSelected && isToday(day)) {
-      return 'today'
-    }
-    if (isDisabledDay) {
-      return 'disabled'
-    }
-    if (isRange) {
-      return 'range'
-    }
-    if (isSameDay(startDate as Date, day)) {
-      return 'startDate'
-    }
-    if (isSameDay(endDate as Date, day)) {
-      return 'endDate'
-    }
+
+    if (!isSelected && isToday(day)) return 'today'
+    if (isDisabledDay) return 'disabled'
+    if (isRange) return 'range'
+    if (isSameDay(startDate as Date, day)) return 'startDate'
+    if (isSameDay(endDate as Date, day)) return 'endDate'
     return 'normal'
   }
 
