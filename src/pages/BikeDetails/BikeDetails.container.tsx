@@ -4,6 +4,8 @@ import { format } from 'date-fns'
 import Bike from 'models/Bike'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import apiClient from 'services/api'
 import BikeDetails from './BikeDetails.component'
 
@@ -20,7 +22,7 @@ const BikeDetailsContainer = () => {
   const [loading, setLoading] = useState(false)
 
   const handleAddToBooking = async () => {
-    if (!currentBikeData || !startDate || !endDate) return alert('Please select dates')
+    if (!currentBikeData || !startDate || !endDate) return toast.warning('Please select dates.')
     try {
       setLoading(true)
 
@@ -35,12 +37,13 @@ const BikeDetailsContainer = () => {
       if (status === 200) {
         setIsBooked(true)
         setLoading(false)
+        toast.success('Bike booked successfully!')
       }
     } catch (error: unknown | AxiosError) {
       console.error('Error while adding to booking', error)
       setLoading(false)
       if (error instanceof AxiosError) {
-        alert(error?.response?.data.message)
+        toast.error(error?.response?.data.message)
       }
     }
   }
@@ -53,16 +56,19 @@ const BikeDetailsContainer = () => {
   }, [])
 
   return (
-    <BikeDetails
-      bike={currentBikeData}
-      startDate={startDate}
-      endDate={endDate}
-      setStartDate={setStartDate}
-      setEndDate={setEndDate}
-      handleAddToBooking={handleAddToBooking}
-      isBooked={isBooked}
-      loading={loading}
-    />
+    <>
+      <BikeDetails
+        bike={currentBikeData}
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={setStartDate}
+        setEndDate={setEndDate}
+        handleAddToBooking={handleAddToBooking}
+        isBooked={isBooked}
+        loading={loading}
+      />
+      <ToastContainer />
+    </>
   )
 }
 

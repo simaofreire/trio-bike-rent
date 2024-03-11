@@ -63,7 +63,7 @@ const BikeDetails = ({
 
       <BreadcrumbContainer data-testid='bike-details-breadcrumbs'>
         <Breadcrumbs separator={<BreadcrumbSeparator />}>
-          <Link underline='hover' display='flex' alignItems='center' color='white' href='/'>
+          <Link underline='hover' display='flex' alignItems='center' color='white' href='/' data-testid='return-home-button'>
             <BreadcrumbHome />
           </Link>
 
