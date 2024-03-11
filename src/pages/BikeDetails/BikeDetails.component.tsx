@@ -55,7 +55,7 @@ const BikeDetails = ({
   const subtotal = checkHowManyDays * rateByDay
   const rateByWeek = rateByDay * 7
   const servicesFee = getServicesFee(rateByDay) * checkHowManyDays
-  const total = checkHowManyDays * rateByDay + servicesFee
+  const total = subtotal + servicesFee
 
   return (
     <div data-testid='bike-details-page'>
