@@ -99,7 +99,7 @@ const BikeDatePickerContainer = ({
       day = addDays(day, 1)
     }
     setCalendarDays(daysArray)
-  }, [startDate, endDate])
+  }, [currentDate, startDate, endDate])
 
   const defineDayType = useCallback(
     (day: Date) => {
